@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Candidature reçue — À la lumière du Coran</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/style.css">
+
+<!-- ============ META PIXEL (recrutement) ============ -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1265563915654966');
+fbq('track', 'PageView');
+// Conversion candidature (basée sur l'arrivée ici) — même event_id que la CAPI Make pour la déduplication
+(function(){
+  var p = new URLSearchParams(location.search);
+  var role = (p.get('role') || 'setter').toLowerCase();
+  var poste = role === 'closer' ? 'Closer' : 'Setter';
+  var eid = p.get('eid') || undefined;
+  fbq('trackCustom', 'Candidature_' + poste, {}, eid ? { eventID: eid } : undefined);
+})();
+</script>
+<!-- =================================================== -->
+
+<style>
+  .merci{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px}
+  .merci .check{width:84px;height:84px;border-radius:50%;background:var(--green-deep);display:flex;align-items:center;justify-content:center;margin-bottom:26px;box-shadow:inset 0 0 0 3px var(--gold)}
+  .merci .check svg{width:40px;height:40px;stroke:var(--gold);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .merci h1{font-size:clamp(30px,5vw,48px);font-weight:800;margin-bottom:14px;line-height:1.1}
+  .merci h1 .g{color:var(--gold)}
+  .merci p{color:var(--grey);font-size:18px;max-width:520px;margin-bottom:10px;line-height:1.5}
+  .merci .brand{margin-top:42px;color:var(--gold);font-weight:600;letter-spacing:6px;text-transform:uppercase;font-size:14px}
+</style>
+</head>
+<body>
+  <div class="merci">
+    <div class="check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <span class="badge">Candidature reçue</span>
+    <h1 style="margin-top:18px">BarakAllahu fik, <span class="g">on a bien reçu ta candidature.</span></h1>
+    <p>On lit chaque dossier à la main. Si ton profil correspond, on te recontacte sur <b style="color:#fff">WhatsApp</b> pour un premier entretien.</p>
+    <p>Garde un œil sur tes messages WhatsApp dans les prochains jours.</p>
+    <div class="brand">À la lumière du Coran</div>
+  </div>
+</body>
+</html>

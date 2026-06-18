@@ -258,13 +258,11 @@ form.addEventListener("submit", async (e) => {
   submitBtn.disabled = true;
   submitBtn.textContent = "Envoi en cours…";
 
-  // event pixel dédié au rôle (= ta conversion d'optimisation)
-  // event_id partagé navigateur + serveur (CAPI) → déduplication Meta
+  // event_id partagé navigateur + serveur → l'event Candidature se déclenche sur merci.html
+  // (avec ce même eventId), et la CAPI Make l'envoie aussi → Meta déduplique.
   const eventId =
     (window.crypto && crypto.randomUUID && crypto.randomUUID()) ||
     "evt_" + Date.now() + "_" + Math.round(Math.random() * 1e9);
-  const eventName = role === "closer" ? "Candidature_Closer" : "Candidature_Setter";
-  if (window.fbq) fbq("trackCustom", eventName, {}, { eventID: eventId });
 
   // payload vers Make (les champs multi-valeurs comme les jours sont regroupés)
   const fd = new FormData(form);
@@ -280,7 +278,7 @@ form.addEventListener("submit", async (e) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-    showSuccess();
+    location.href = "merci.html?role=" + encodeURIComponent(role) + "&eid=" + encodeURIComponent(eventId);
   } catch (err) {
     submitBtn.disabled = false;
     submitBtn.textContent = "Envoyer ma candidature";
