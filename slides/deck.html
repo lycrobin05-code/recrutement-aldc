@@ -31,6 +31,11 @@
   h1{font-weight:800;font-size:90px;line-height:1.04;letter-spacing:-1.5px;position:relative;z-index:2;max-width:1500px}
   .center h1{font-size:104px;max-width:1500px}
   .slide.sm h1{font-size:62px;line-height:1.14}
+  /* layout 2 colonnes avec photo */
+  .slide.split{flex-direction:row;align-items:center;gap:96px}
+  .slide.split .col-text{flex:1 1 auto;min-width:0}
+  .slide.split .col-img{flex:0 0 540px;position:relative;z-index:3}
+  .slide.split .col-img img{width:540px;height:540px;object-fit:cover;border-radius:30px;border:2px solid rgba(201,169,126,.35);box-shadow:0 30px 90px rgba(0,0,0,.55)}
   h1 .g{color:var(--gold)} h1 .v{color:var(--green)}
 
   .sub{color:var(--grey);font-size:40px;line-height:1.42;margin-top:40px;max-width:1380px;font-weight:400;position:relative;z-index:2}
@@ -57,7 +62,7 @@
 <script>
 const S = [
   {k:"On recrute", sm:true, t:`Actuellement, nous recherchons des <span class="g">setters</span> et des <span class="v">closers</span> <span style="color:#9a9a9a;font-weight:600">(homme / femme)</span> pour notre institut d'arabe coranique.`, sub:`Je t'invite à bien regarder cette vidéo en entier pour comprendre ce qu'on recherche — et ce qu'on ne recherche pas.`},
-  {k:"Qui suis-je", t:`Moi, c'est <span class="g">Thomas</span>.`, bullets:[`Professeur d'arabe depuis plus de <b>4 ans</b>`,`Formé par <b>Nouman Ali Khan</b>, l'un des profs d'arabe les plus connus au monde`]},
+  {t:`Qui est <span class="g">Thomas</span> ?`, img:"thomas.jpg", bullets:[`Professeur d'arabe depuis plus de <b>4 ans</b>`,`Formé par <b>Nouman Ali Khan</b>, l'un des profs d'arabe les plus connus au monde`]},
   {k:"Mon parcours", t:`J'avais tout essayé pour <span class="g">apprendre l'arabe</span>…`, sub:`Rien n'avait fonctionné, jusqu'à ce que je découvre cette méthode. J'ai donc vécu exactement ce que vivent les élèves qu'on accompagne — je connais leurs blocages et ce dont ils ont besoin.`},
   {k:"L'institut", center:true, sm:true, t:`L'objectif de notre institut est de devenir <span class="g">la référence numéro 1</span> de l'apprentissage de l'arabe.`},
   {t:`Et pour ça,<br>on a besoin <span class="g">de toi.</span>`, center:true},
@@ -80,12 +85,15 @@ const S = [
 
 function render(i){
   const s = S[i];
-  let h = `<div class="slide show${s.center?' center':''}${s.sm?' sm':''}">`;
+  const split = !!s.img;
+  let h = `<div class="slide show${s.center?' center':''}${s.sm?' sm':''}${split?' split':''}">`;
+  if(split) h += `<div class="col-text">`;
   if(s.k) h += `<div class="kicker">${s.k}</div>`;
   if(s.t) h += `<h1>${s.t}</h1>`;
   if(s.sub) h += `<div class="sub">${s.sub}</div>`;
   if(s.bullets){h+=`<ul>`;s.bullets.forEach(b=>h+=`<li><span class="dot"></span><span>${b}</span></li>`);h+=`</ul>`;}
   if(s.pair){h+=`<div class="pair">`;s.pair.forEach(p=>h+=`<div class="pcard"><div class="num">${p.num}</div><div class="lbl">${p.lbl}</div></div>`);h+=`</div>`;}
+  if(split) h += `</div><div class="col-img"><img src="${s.img}" alt="Thomas"></div>`;
   h += `<footer><div class="brand">À la lumière du Coran</div><div class="pageno">${String(i+1).padStart(2,'0')} / ${String(S.length).padStart(2,'0')}</div></footer>`;
   h += `</div>`;
   document.getElementById('root').innerHTML = h;
