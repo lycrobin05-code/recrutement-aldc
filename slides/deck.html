@@ -63,7 +63,7 @@
 const S = [
   {k:"On recrute", sm:true, t:`Actuellement, nous recherchons des <span class="g">setters</span> et des <span class="v">closers</span> <span style="color:#9a9a9a;font-weight:600">(homme / femme)</span> pour notre institut d'arabe coranique.`, sub:`Je t'invite à bien regarder cette vidéo en entier pour comprendre ce qu'on recherche — et ce qu'on ne recherche pas.`},
   {t:`Qui est <span class="g">Thomas</span> ?`, img:"thomas.jpg", bullets:[`Professeur d'arabe depuis plus de <b>4 ans</b>`,`Formé par <b>Nouman Ali Khan</b>, l'un des profs d'arabe les plus connus au monde`]},
-  {k:"Mon parcours", t:`J'avais tout essayé pour <span class="g">apprendre l'arabe</span>…`, sub:`Rien n'avait fonctionné, jusqu'à ce que je découvre cette méthode. J'ai donc vécu exactement ce que vivent les élèves qu'on accompagne — je connais leurs blocages et ce dont ils ont besoin.`},
+  {k:"Son parcours", t:`« J'avais tout essayé pour <span class="g">apprendre l'arabe</span>… »`, sub:`Rien n'avait fonctionné, jusqu'à ce que je découvre cette méthode. J'ai donc vécu exactement ce que vivent les élèves qu'on accompagne — je connais leurs blocages et ce dont ils ont besoin.`},
   {k:"L'institut", center:true, sm:true, t:`L'objectif de notre institut est de devenir <span class="g">la référence numéro 1</span> de l'apprentissage de l'arabe.`},
   {t:`Et pour ça,<br>on a besoin <span class="g">de toi.</span>`, center:true},
   {k:"Qui on aide ?", t:`Des <span class="g">frères et sœurs francophones</span>,<br>principalement entre 25 et 50 ans.`, sub:`Leur objectif : atteindre une compréhension totale de l'arabe coranique en <b style="color:#C9A97E">10 mois</b>.`},
@@ -107,7 +107,11 @@ let idx = parseInt(params.get('s')||'0',10); if(isNaN(idx)||idx<0)idx=0; if(idx>
 function go(n){ idx=Math.max(0,Math.min(S.length-1,n)); render(idx); fit(); }
 go(idx);
 window.addEventListener('resize',fit);
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(idx+1);if(e.key==='ArrowLeft')go(idx-1);});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')go(idx+1);
+  if(e.key==='ArrowLeft')go(idx-1);
+  if(e.key==='f'||e.key==='F'){ if(!document.fullscreenElement){(document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen||function(){}).call(document.documentElement)} else {(document.exitFullscreen||document.webkitExitFullscreen||function(){}).call(document)} }
+});
 // navigation tactile / clic : moitié droite = suivant, moitié gauche = précédent
 document.addEventListener('click',e=>{ go(e.clientX < window.innerWidth/2 ? idx-1 : idx+1); });
 window.__SLIDE_COUNT__ = S.length;
