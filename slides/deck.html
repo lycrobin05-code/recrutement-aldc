@@ -30,6 +30,7 @@
 
   h1{font-weight:800;font-size:90px;line-height:1.04;letter-spacing:-1.5px;position:relative;z-index:2;max-width:1500px}
   .center h1{font-size:104px;max-width:1500px}
+  .slide.sm h1{font-size:62px;line-height:1.14}
   h1 .g{color:var(--gold)} h1 .v{color:var(--green)}
 
   .sub{color:var(--grey);font-size:40px;line-height:1.42;margin-top:40px;max-width:1380px;font-weight:400;position:relative;z-index:2}
@@ -55,33 +56,31 @@
 <div id="root"></div>
 <script>
 const S = [
-  {k:"On recrute", t:`Salam aleykoum.`, sub:`Si tu regardes cette vidéo, c'est que tu es <b style="color:#C9A97E">setter</b> ou <b style="color:#3E9079">closer</b> — et on recrute. Regarde-la en entier : sinon ta candidature ne sera pas prise en compte.`, center:true},
+  {k:"On recrute", sm:true, t:`Actuellement, nous recherchons des <span class="g">setters</span> et des <span class="v">closers</span> <span style="color:#9a9a9a;font-weight:600">(homme / femme)</span> pour notre institut.`, sub:`Je t'invite à bien regarder cette vidéo en entier pour comprendre ce qu'on recherche — et ce qu'on ne recherche pas.`},
   {k:"Qui suis-je", t:`Moi, c'est <span class="g">Thomas</span>.`, bullets:[`Professeur d'arabe depuis plus de <b>4 ans</b>`,`Formé par <b>Nouman Ali Khan</b>, l'un des profs d'arabe les plus connus au monde`]},
-  {k:"Mon parcours", t:`J'avais tout essayé.`, sub:`Rien n'avait fonctionné… jusqu'à ce que je découvre cette méthode. J'ai vécu exactement ce que vivent les élèves qu'on accompagne — je connais leurs blocages et ce dont ils ont besoin.`},
-  {k:"L'institut", t:`À la lumière du Coran`, sub:`Notre objectif : devenir <span style="color:#C9A97E">la référence n°1</span> de l'apprentissage de l'arabe.`},
+  {k:"Mon parcours", t:`J'avais tout essayé pour <span class="g">apprendre l'arabe</span>…`, sub:`Rien n'avait fonctionné, jusqu'à ce que je découvre cette méthode. J'ai donc vécu exactement ce que vivent les élèves qu'on accompagne — je connais leurs blocages et ce dont ils ont besoin.`},
+  {k:"L'institut", center:true, sm:true, t:`L'objectif de notre institut est de devenir <span class="g">la référence numéro 1</span> de l'apprentissage de l'arabe.`},
   {t:`Et pour ça,<br>on a besoin <span class="g">de toi.</span>`, center:true},
-  {k:"Qui on aide", t:`Des musulmans francophones,<br><span class="g">25 à 45 ans</span>.`, sub:`Objectif : une compréhension totale de l'arabe coranique en <b style="color:#C9A97E">10 mois</b>.`},
-  {k:"La méthode Baynah", t:`Comprendre le Coran.<br><span class="v">Pas réciter sans saisir.</span>`, sub:`On ne perd pas des mois à apprendre à se présenter ou à demander du pain. L'objectif premier, c'est la compréhension du Coran.`},
-  {t:`Comprendre ce qu'ils <span class="g">lisent</span>,<br>ce qu'ils <span class="g">récitent</span>,<br>ce qu'ils entendent à la <span class="g">mosquée</span>.`, center:true},
-  {k:"Nos 2 programmes", t:`Deux parcours`, pair:[{num:"9 mois",lbl:"Pour ceux qui savent déjà lire l'arabe"},{num:"10 mois",lbl:"Pour ceux qui ne savent pas encore lire"}]},
+  {k:"Qui on aide ?", t:`Des <span class="g">frères et sœurs francophones</span>,<br>principalement entre 25 et 50 ans.`, sub:`Leur objectif : atteindre une compréhension totale de l'arabe coranique en <b style="color:#C9A97E">10 mois</b>.`},
+  {k:"Nos 2 programmes", t:`Deux programmes <span class="g">high-ticket</span>`, pair:[{num:"9 mois",lbl:"Pour ceux qui savent déjà lire l'arabe"},{num:"10 mois",lbl:"Pour ceux qui ne savent pas encore lire"}]},
   {k:"L'accompagnement", t:`Un suivi <span class="g">complet</span>`, bullets:[`Cours individuels avec un <b>professeur attitré</b>`,`Une <b>plateforme vidéo</b>`,`Des <b>manuels</b> pour le travail personnel`]},
-  {k:"D'où viennent nos prospects", t:`Un tunnel VSL <span class="g">qui tourne</span>.`, sub:`Avec, en plus, une forte présence organique.`},
-  {k:"Présence organique", t:`Une vraie audience`, pair:[{num:"12K",lbl:"Instagram"},{num:"27K",lbl:"Facebook"},{num:"3K",lbl:"YouTube"}]},
-  {k:"Ce qu'on vend vraiment", t:`Pas des cours de langue.<br>Une <span class="v">transformation spirituelle.</span>`, sub:`Comprendre enfin le Coran et ses prières, se rapprocher d'Allah, et transmettre cet apprentissage à ses enfants. Les témoignages sont réels — ils sont sur ma chaîne YouTube.`},
+  {k:"D'où viennent nos prospects ?", t:`Un tunnel VSL <span class="g">qui performe</span>.`, sub:`Avec, en plus, une présence organique.`},
+  {sm:true, t:`Pour la présence organique, l'institut compte :`, pair:[{num:"12K",lbl:"Instagram"},{num:"27K",lbl:"Facebook"},{num:"3K",lbl:"YouTube"}]},
+  {k:"Ce qu'on vend vraiment", sm:true, t:`Pas de simples cours de langue, mais une réelle <span class="v">transformation spirituelle</span>.`, sub:`Car à la fin de notre programme, nos élèves pourront enfin comprendre le Coran et les prières, pour se rapprocher d'Allah, et transmettre potentiellement cet apprentissage à leurs enfants. Plusieurs témoignages sont disponibles sur ma chaîne YouTube « témoignages ».`},
   {k:"Le rôle du setter", t:`Tu ne prends pas<br>que des rendez-vous.`, sub:`Tu <span style="color:#C9A97E">qualifies</span> et tu <span style="color:#C9A97E">éduques</span>. Tu es la première voix de l'institut.`},
-  {k:"Setter — tes missions", t:`Ce qu'on attend de toi`, bullets:[`<b>Réactivité immédiate</b> : recontacter un lead en moins de 5 min`,`<b>Qualification fine</b> : repérer les vrais projets, pas les curieux`,`<b>RDV de qualité</b> : prospects pré-vendus, show-up <span class="v">> 80 %</span>`]},
+  {k:"Setter — tes missions", t:`Ce qu'on attend de toi`, bullets:[`<b>Une réactivité immédiate</b> : recontacter par téléphone un lead qui a laissé ses informations, en moins de 5 min`,`<b>Une qualification fine</b> : repérer les vrais projets, pas les curieux`,`<b>Des RDV de qualité</b> : prospects pré-vendus, et un taux de show-up <span class="v">supérieur à 80 %</span>`]},
   {k:"Le rôle du closer", t:`On ne cherche pas<br><span class="g">n'importe qui.</span>`, center:true},
   {k:"Closer — ce qu'on recherche", bullets:[`<b>Expérience</b> en closing (B2C idéalement, pas obligatoire)`,`<b>Sensibilité spirituelle</b> : comprendre l'impact de ce qu'on vend`,`<b>Ambition</b> : grandir avec nous, sur le long terme`,`<b>Autonomie</b> : gérer ton temps et tes résultats`,`<b>Bienveillance</b> : rassurer des élèves qui ont souvent connu l'échec`]},
   {k:"Ce qu'on t'offre", bullets:[`Une <b>formation complète</b> à notre méthode et notre script`,`Des <b>leads qualifiés</b> en quantité via le tunnel VSL`,`Des <b>outils et process rodés</b> (CRM, scripts…)`,`Une <b>évolution rapide</b> selon ta performance`]},
   {k:"Rémunération — Setter", t:`<span class="g">Setter</span>`, bullets:[`<b>4 %</b> sur le no-booking · <b>8 %</b> sur le self-booking <span style="color:#B9B9B9;font-weight:400">(sur le cash collecté)</span>`,`<b>Bonus de performance</b> : speed-to-lead & taux de show-up`]},
   {k:"Rémunération — Closer", t:`<span class="g">Closer</span>`, bullets:[`<b>10 %</b> du cash collecté`,`<b>Bonus de performance</b> : PIF & montant total collecté`]},
-  {k:"Prochaine étape", t:`Remplis le formulaire<br>sous la vidéo.`, bullets:[`On étudie ta candidature sous <b>24 h</b>`,`Entretien avec mon associé au recrutement`,`Une petite phase de test (role-plays)`,`Si tout est bon → <span class="v">onboarding dans l'équipe</span>`]},
+  {k:"Prochaine étape", t:`Remplis le formulaire<br>sous la vidéo.`, bullets:[`On étudiera ta candidature sous <b>48 h</b>`,`Si ton profil nous intéresse, tu auras un entretien avec mon associé`,`Une phase de test (role-plays)`,`Et si tout est bon → <span class="v">onboarding dans l'équipe</span>`]},
   {t:`Prêt à <span class="g">transformer des vies</span><br>avec nous ?`, sub:`Postule juste en dessous 👇`, center:true},
 ];
 
 function render(i){
   const s = S[i];
-  let h = `<div class="slide show${s.center?' center':''}">`;
+  let h = `<div class="slide show${s.center?' center':''}${s.sm?' sm':''}">`;
   if(s.k) h += `<div class="kicker">${s.k}</div>`;
   if(s.t) h += `<h1>${s.t}</h1>`;
   if(s.sub) h += `<div class="sub">${s.sub}</div>`;
