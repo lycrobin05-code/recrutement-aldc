@@ -51,11 +51,11 @@ body{
 .choice .pick .go.c{color:var(--green)}
 
 /* ---------- Hero ---------- */
-.hero{text-align:center;padding:72px 0 40px}
-.hero h1{font-size:clamp(40px,7vw,76px);font-weight:900;line-height:1.0;letter-spacing:-1px;margin:24px 0 18px}
+.hero{text-align:center;padding:26px 0 18px}
+.hero h1{font-size:clamp(27px,4vw,46px);font-weight:900;line-height:1.05;letter-spacing:-1px;margin:14px 0 12px}
 .hero h1 .role{color:var(--gold)}
 .hero h1 .green{color:var(--green)}
-.hero .sub{color:var(--grey);font-size:20px;max-width:600px;margin:0 auto 30px}
+.hero .sub{color:var(--grey);font-size:17px;max-width:600px;margin:0 auto 18px}
 .tags{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .tag{border:1px solid var(--line);border-radius:30px;padding:8px 18px;font-size:14px;color:var(--white)}
 .tag b{color:var(--gold)}
@@ -166,9 +166,9 @@ body{overflow-x:hidden}
   #splitter p{font-size:16px;margin-bottom:32px}
   .choice{width:100%;gap:14px}
   .choice .pick{width:100%}
-  .hero{padding:44px 0 26px}
-  .hero h1{font-size:32px;line-height:1.12}
-  .hero .sub{font-size:16px}
+  .hero{padding:18px 0 12px}
+  .hero h1{font-size:23px;line-height:1.15}
+  .hero .sub{font-size:14px;margin-bottom:14px}
   .form-card{padding:22px 17px}
   .form-section h2,.vsl-section + #apply h2{font-size:26px}
   .opts{gap:8px}

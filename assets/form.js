@@ -21,7 +21,7 @@ const PROFIL_STEP = {
     { name: "email", label: "Email", type: "email", required: true },
     { name: "whatsapp", label: "Numéro WhatsApp", type: "tel", required: true },
     { name: "age", label: "Ton âge", type: "number", required: true, min: 16, max: 80 },
-    { name: "pays", label: "Pays de résidence", type: "text", required: true, placeholder: "Ex : France" },
+    { name: "pays", label: "🌍 Dans quel pays / fuseau horaire es-tu ?", type: "text", required: true, placeholder: "Ex : France (UTC+1)" },
     { name: "musulman", label: "Es-tu musulman(e) ?", type: "radio", required: true, options: ["Oui", "Non"] },
   ],
 };
@@ -34,7 +34,7 @@ const SETTER_STEPS = [
     fields: [
       { name: "jours", label: "📆 Quels jours es-tu disponible ?", type: "checkbox", required: true, exclusiveOption: "Tous les jours", options: ["Tous les jours", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] },
       { name: "heures", label: "⏰ Combien d'heures par semaine serais-tu dispo ?", type: "radio", required: true, options: ["Moins de 10h", "10-20h", "20-30h", "30-40h", "40h+ (full time)"] },
-      { name: "reactivite", label: "📨 Peux-tu contacter un lead en moins de 5 min ?", type: "radio", required: true, options: ["Oui sans problème", "La plupart du temps", "Pas toujours"] },
+      { name: "reactivite", label: "📞 Peux-tu contacter un lead qui a opt-in en moins de 5 min ?", type: "radio", required: true, options: ["Oui sans problème", "La plupart du temps", "Rarement"] },
       { name: "demarrage", label: "📅 Quand peux-tu démarrer ?", type: "radio", required: true, options: ["Immédiatement", "1 semaine", "2 semaines", "1 mois", "Plus tard"] },
       { name: "autres_activites", label: "📋 As-tu d'autres activités ou emplois en parallèle ? Si oui, lesquels et combien de temps ça te prend ?", type: "textarea", required: true },
     ],
@@ -55,7 +55,7 @@ const CLOSER_STEPS = [
   {
     label: "Étape 2 / 3 — 💼 Ton expérience",
     fields: [
-      { name: "closing_duree", label: "⏳ Depuis combien de temps fais-tu du closing ?", type: "radio", required: true, options: ["Moins de 6 mois", "6 mois - 1 an", "1 - 2 ans", "2 ans+"] },
+      { name: "closing_duree", label: "⏳ Depuis combien de temps fais-tu du closing ?", type: "radio", required: true, options: ["Je n'ai pas encore d'expérience", "Moins de 6 mois", "6 mois - 1 an", "1 - 2 ans", "2 ans+"] },
       { name: "formation", label: "🎓 Chez qui t'es-tu formé en vente ?", type: "text", required: true },
       { name: "offres", label: "💰 Quel type d'offres as-tu déjà vendues ? (prix et niche)", type: "text", required: true, placeholder: "Ex : coaching fitness 2000€, formation business 3000€…" },
       { name: "meilleur_taux", label: "📈 Quel est ton meilleur taux de closing sur une mission, et sur quelle offre ?", type: "text", required: true, placeholder: "Ex : 20% sur du coaching à 2000€" },
@@ -240,8 +240,69 @@ Object.keys(DISQUALIFY).forEach((name) => {
   });
 });
 
+// ---------- Disqualification redirigée (vers la page sans pixel) ----------
+// Renvoie true si le candidat est disqualifié et a été redirigé.
+function redirectIfDisqualified() {
+  // Âge ≤ 18 → disqualifié (les deux rôles)
+  const ageEl = form.querySelector('input[name="age"]');
+  if (ageEl && ageEl.value.trim() && Number(ageEl.value) <= 18) {
+    location.href = "disqualification.html";
+    return true;
+  }
+  // Setter : critères de disponibilité
+  if (role === "setter") {
+    // dispo < 6 jours → disqualifié ("Tous les jours" = qualifié)
+    const jours = [...form.querySelectorAll('input[name="jours"]:checked')].map((el) => el.value);
+    if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 6) {
+      location.href = "disqualification.html";
+      return true;
+    }
+    // moins de 20h/sem → disqualifié
+    const heuresEl = form.querySelector('input[name="heures"]:checked');
+    if (heuresEl && ["Moins de 10h", "10-20h"].includes(heuresEl.value)) {
+      location.href = "disqualification.html";
+      return true;
+    }
+    // réactivité "Rarement" → disqualifié
+    const reactEl = form.querySelector('input[name="reactivite"]:checked');
+    if (reactEl && reactEl.value === "Rarement") {
+      location.href = "disqualification.html";
+      return true;
+    }
+    // démarrage trop lointain → disqualifié
+    const demEl = form.querySelector('input[name="demarrage"]:checked');
+    if (demEl && ["2 semaines", "1 mois", "Plus tard"].includes(demEl.value)) {
+      location.href = "disqualification.html";
+      return true;
+    }
+  }
+  // Closer : critères
+  if (role === "closer") {
+    // aucune expérience de closing → disqualifié
+    const dureeEl = form.querySelector('input[name="closing_duree"]:checked');
+    if (dureeEl && dureeEl.value === "Je n'ai pas encore d'expérience") {
+      location.href = "disqualification.html";
+      return true;
+    }
+    // démarrage "1 mois+" → disqualifié
+    const demEl = form.querySelector('input[name="demarrage"]:checked');
+    if (demEl && demEl.value === "1 mois+") {
+      location.href = "disqualification.html";
+      return true;
+    }
+    // dispo < 5 jours → disqualifié ("Tous les jours" = qualifié)
+    const jours = [...form.querySelectorAll('input[name="jours"]:checked')].map((el) => el.value);
+    if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 5) {
+      location.href = "disqualification.html";
+      return true;
+    }
+  }
+  return false;
+}
+
 nextBtn.addEventListener("click", () => {
   if (!validateStep(current)) return;
+  if (redirectIfDisqualified()) return;
   current = Math.min(current + 1, stepEls.length - 1);
   showStep(current);
 });
@@ -254,6 +315,7 @@ prevBtn.addEventListener("click", () => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!validateStep(current)) return;
+  if (redirectIfDisqualified()) return;
 
   submitBtn.disabled = true;
   submitBtn.textContent = "Envoi en cours…";
