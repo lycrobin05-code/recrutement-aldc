@@ -25,7 +25,10 @@ fbq('track', 'PageView');
   var role = (p.get('role') || 'setter').toLowerCase();
   var poste = role === 'closer' ? 'Closer' : 'Setter';
   var eid = p.get('eid') || undefined;
-  fbq('trackCustom', 'Candidature_' + poste, {}, eid ? { eventID: eid } : undefined);
+  var opts = eid ? { eventID: eid } : undefined;
+  // Lead = event standard sur lequel les ads optimisent (dédupliqué avec le Lead envoyé par la CAPI Make)
+  fbq('track', 'Lead', { content_category: poste }, opts);
+  fbq('trackCustom', 'Candidature_' + poste, {}, opts);
 })();
 </script>
 <!-- =================================================== -->
