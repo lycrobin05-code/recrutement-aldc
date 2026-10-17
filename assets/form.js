@@ -55,23 +55,26 @@ const CLOSER_STEPS = [
   {
     label: "Étape 2 / 3 — 💼 Ton expérience",
     fields: [
-      { name: "closing_duree", label: "⏳ Depuis combien de temps fais-tu du closing ?", type: "radio", required: true, options: ["Je n'ai pas encore d'expérience", "Moins de 6 mois", "6 mois - 1 an", "1 - 2 ans", "2 ans+"] },
+      { name: "closing_duree", label: "⏳ Depuis combien de temps es-tu closer/sales ?", type: "radio", required: true, options: ["Je n'ai pas encore d'expérience", "Moins de 6 mois", "6 mois - 1 an", "1 - 2 ans", "2 - 4 ans", "4 ans et plus"] },
+      { name: "close_actuel", label: "🤝 Est-ce que tu closes actuellement sur une offre ?", type: "radio", required: true, options: ["Oui", "Non"] },
       { name: "formation", label: "🎓 Chez qui t'es-tu formé en vente ?", type: "text", required: true },
-      { name: "offres", label: "💰 Quel type d'offres as-tu déjà vendues ? (prix et niche)", type: "text", required: true, placeholder: "Ex : coaching fitness 2000€, formation business 3000€…" },
+      { name: "offres", label: "🏷️ Sur quelle offre as-tu déjà travaillé ? (prix et niche)", type: "text", required: true, placeholder: "Ex : coaching fitness 2000€, formation business 3000€…" },
       { name: "meilleur_taux", label: "📈 Quel est ton meilleur taux de closing sur une mission, et sur quelle offre ?", type: "text", required: true, placeholder: "Ex : 20% sur du coaching à 2000€" },
-      { name: "derniere_reecoute", label: "🎧 C'est quand la dernière fois que tu as réécouté un de tes appels de vente ?", type: "text", required: true, placeholder: "Ta réponse…" },
-      { name: "appels_jour", label: "📞 Combien d'appels par jour pourrais-tu prendre ?", type: "radio", required: true, options: ["1-2 / jour", "3-4 / jour", "5+ / jour"] },
+      { name: "commissions_3_mois", label: "💶 Combien de commissions as-tu générées ces 3 derniers mois ? (mois par mois)", type: "textarea", required: true, placeholder: "Ex : Mois 1 : 3 200 € · Mois 2 : 4 100 € · Mois 3 : 2 800 €" },
+      { name: "appels_semaine", label: "📞 Combien d'appels par semaine pourrais-tu prendre si on commençait dès cette semaine ?", type: "radio", required: true, options: ["Moins de 10 / semaine", "10-20 / semaine", "20-30 / semaine", "30+ / semaine"] },
       { name: "demarrage", label: "📅 Quand peux-tu démarrer ?", type: "radio", required: true, options: ["⚡ Immédiatement", "1 semaine", "2 semaines", "1 mois+"] },
+      { name: "temps_plein", label: "🕐 À terme, es-tu disponible à temps plein ?", type: "radio", required: true, options: ["Oui", "Non"] },
       { name: "jours", label: "📆 Quels jours es-tu disponible ?", type: "checkbox", required: true, exclusiveOption: "Tous les jours", options: ["Tous les jours", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] },
-      { name: "remuneration", label: "💸 Qu'attends-tu de ce poste en termes de rémunération ?", type: "text", required: true },
+      { name: "objectifs", label: "🎯 Quels sont tes objectifs ? (de revenu, et en dehors du revenu)", type: "textarea", required: true, placeholder: "Ta réponse…" },
     ],
   },
   {
     label: "Étape 3 / 3 — 🎯 Montre-nous tes compétences",
     fields: [
       { name: "zone_confort", label: "Selon toi, faut-il faire sortir les prospects de leur zone de confort ?", type: "textarea", required: true, placeholder: "Ta réponse…" },
-      { name: "objection_cher", label: "🚫 Que réponds-tu à l'objection « C'est trop cher » ?", type: "textarea", required: true, placeholder: "Ta réponse…" },
-      { name: "objection_reflexion", label: "🤔 Que réponds-tu à « Je dois y réfléchir, on peut se rappeler la semaine prochaine » ?", type: "textarea", required: true, placeholder: "Ta réponse…" },
+      { name: "interet_offre", label: "💡 Qu'est-ce qui t'intéresse dans cette offre ?", type: "textarea", required: true, placeholder: "Ta réponse…" },
+      { name: "motivation_meilleur", label: "🏆 Quelle est ta motivation pour devenir le meilleur ?", type: "textarea", required: true, placeholder: "Ta réponse…" },
+      { name: "enregistrements", label: "🎙️ Si possible, partage un lien Google Drive avec 3 enregistrements d'appels de vente récents", type: "url", required: false, placeholder: "https://drive.google.com/…", hint: "Vérifie bien que le lien est accessible en lecture (partage : « Tous les utilisateurs disposant du lien »)." },
       { name: "pourquoi_toi", label: "🔥 Pourquoi toi et pas un autre closer ? (on a +20 profils)", type: "textarea", required: true },
     ],
   },
@@ -105,7 +108,8 @@ function renderField(f) {
     const extra = [f.min != null ? `min="${f.min}"` : "", f.max != null ? `max="${f.max}"` : ""].join(" ");
     control = `<input type="${f.type}" id="${id}" name="${f.name}" ${f.required ? "required" : ""} placeholder="${f.placeholder || ""}" ${extra}>`;
   }
-  return `<div class="field"><label for="${id}">${f.label}${f.required ? ' <span class="req">*</span>' : ""}</label>${control}</div>`;
+  const hint = f.hint ? `<div class="hint">${f.hint}</div>` : "";
+  return `<div class="field"><label for="${id}">${f.label}${f.required ? ' <span class="req">*</span>' : ""}</label>${control}${hint}</div>`;
 }
 
 const stepsHTML = STEPS.map(
