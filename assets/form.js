@@ -57,6 +57,7 @@ const CLOSER_STEPS = [
     fields: [
       { name: "closing_duree", label: "⏳ Depuis combien de temps es-tu closer/sales ?", type: "radio", required: true, options: ["Je n'ai pas encore d'expérience", "Moins de 6 mois", "6 mois - 1 an", "1 - 2 ans", "2 - 4 ans", "4 ans et plus"] },
       { name: "close_actuel", label: "🤝 Est-ce que tu closes actuellement sur une offre ?", type: "radio", required: true, options: ["Oui", "Non"] },
+      { name: "close_actuel_offre", label: "Laquelle ? (offre et tarif)", type: "text", required: true, placeholder: "Ex : coaching business, 3 000 €", showIf: { name: "close_actuel", value: "Oui" } },
       { name: "formation", label: "🎓 Chez qui t'es-tu formé en vente ?", type: "text", required: true },
       { name: "offres", label: "🏷️ Sur quelle offre as-tu déjà travaillé ? (prix et niche)", type: "text", required: true, placeholder: "Ex : coaching fitness 2000€, formation business 3000€…" },
       { name: "meilleur_taux", label: "📈 Quel est ton meilleur taux de closing sur une mission, et sur quelle offre ?", type: "text", required: true, placeholder: "Ex : 20% sur du coaching à 2000€" },
@@ -109,7 +110,10 @@ function renderField(f) {
     control = `<input type="${f.type}" id="${id}" name="${f.name}" ${f.required ? "required" : ""} placeholder="${f.placeholder || ""}" ${extra}>`;
   }
   const hint = f.hint ? `<div class="hint">${f.hint}</div>` : "";
-  return `<div class="field"><label for="${id}">${f.label}${f.required ? ' <span class="req">*</span>' : ""}</label>${control}${hint}</div>`;
+  // champ conditionnel : masqué (et non requis) tant que la réponse déclencheuse n'est pas cochée
+  const cond = f.showIf ? ` data-showif-name="${f.showIf.name}" data-showif-value="${f.showIf.value}" data-required="${f.required ? 1 : 0}" style="display:none"` : "";
+  if (f.showIf) control = control.replace(/ required/g, "");
+  return `<div class="field"${cond}><label for="${id}">${f.label}${f.required ? ' <span class="req">*</span>' : ""}</label>${control}${hint}</div>`;
 }
 
 const stepsHTML = STEPS.map(
@@ -208,6 +212,23 @@ form.querySelectorAll(".opts[data-exclusive]").forEach((group) => {
       }
     });
   });
+});
+
+// ---------- Champs conditionnels (ex : "Laquelle ?" si "Oui") ----------
+form.querySelectorAll(".field[data-showif-name]").forEach((fieldEl) => {
+  const trig = fieldEl.dataset.showifName, val = fieldEl.dataset.showifValue;
+  const inner = fieldEl.querySelectorAll("input, textarea, select");
+  const update = () => {
+    const checked = form.querySelector(`input[name="${trig}"]:checked`);
+    const show = !!checked && checked.value === val;
+    fieldEl.style.display = show ? "" : "none";
+    inner.forEach((el) => {
+      el.required = show && fieldEl.dataset.required === "1";
+      if (!show) { el.value = ""; el.setCustomValidity(""); }
+    });
+  };
+  form.querySelectorAll(`input[name="${trig}"]`).forEach((inp) => inp.addEventListener("change", update));
+  update();
 });
 
 // ---------- Disqualification ----------
