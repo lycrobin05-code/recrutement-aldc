@@ -65,7 +65,7 @@ const CLOSER_STEPS = [
       { name: "appels_semaine", label: "📞 Combien d'appels par semaine pourrais-tu prendre si on commençait dès cette semaine ?", type: "radio", required: true, options: ["Moins de 10 / semaine", "10-20 / semaine", "20-30 / semaine", "30+ / semaine"] },
       { name: "temps_plein", label: "🕐 À terme, es-tu disponible à temps plein ?", type: "radio", required: true, options: ["Oui", "Non"] },
       { name: "demarrage", label: "📅 Quand peux-tu démarrer ?", type: "radio", required: true, options: ["⚡ Immédiatement", "1 semaine", "2 semaines", "1 mois+"] },
-      { name: "jours", label: "📆 Quels jours es-tu disponible ?", type: "checkbox", required: true, exclusiveOption: "Tous les jours", options: ["Tous les jours", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] },
+      { name: "jours", label: "📆 Quels jours es-tu disponible ?", type: "checkbox", required: true, exclusiveOption: "Tous les jours|À voir", options: ["Tous les jours", "À voir", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"] },
     ],
   },
   {
@@ -198,17 +198,16 @@ document.querySelectorAll('.opts[data-required="1"] input[type=checkbox]').forEa
 
 // ---------- "Tous les jours" exclusif des jours individuels ----------
 form.querySelectorAll(".opts[data-exclusive]").forEach((group) => {
-  const exVal = group.dataset.exclusive;
-  if (!exVal) return;
+  const exVals = group.dataset.exclusive.split("|").filter(Boolean); // ex : "Tous les jours" et "À voir"
+  if (!exVals.length) return;
   const boxes = [...group.querySelectorAll("input[type=checkbox]")];
   boxes.forEach((box) => {
     box.addEventListener("change", () => {
       if (!box.checked) return;
-      if (box.value === exVal) {
-        boxes.forEach((b) => { if (b !== box) b.checked = false; }); // "Tous les jours" → décoche le reste
+      if (exVals.includes(box.value)) {
+        boxes.forEach((b) => { if (b !== box) b.checked = false; }); // option exclusive → décoche le reste
       } else {
-        const ex = boxes.find((b) => b.value === exVal);
-        if (ex) ex.checked = false; // un jour précis → décoche "Tous les jours"
+        boxes.forEach((b) => { if (exVals.includes(b.value)) b.checked = false; }); // un jour précis → décoche les exclusives
       }
     });
   });
@@ -266,61 +265,39 @@ Object.keys(DISQUALIFY).forEach((name) => {
 });
 
 // ---------- Disqualification redirigée (vers la page sans pixel) ----------
+// La raison est passée dans l'URL pour que la page l'affiche au candidat.
+function disqualify(reason) {
+  location.href = "disqualification.html?role=" + encodeURIComponent(role) + "&reason=" + encodeURIComponent(reason);
+  return true;
+}
 // Renvoie true si le candidat est disqualifié et a été redirigé.
 function redirectIfDisqualified() {
   // Âge ≤ 18 → disqualifié (les deux rôles)
   const ageEl = form.querySelector('input[name="age"]');
-  if (ageEl && ageEl.value.trim() && Number(ageEl.value) <= 18) {
-    location.href = "disqualification.html?role=" + encodeURIComponent(role);
-    return true;
-  }
+  if (ageEl && ageEl.value.trim() && Number(ageEl.value) <= 18) return disqualify("age");
   // Setter : critères de disponibilité
   if (role === "setter") {
     // dispo < 6 jours → disqualifié ("Tous les jours" = qualifié)
     const jours = [...form.querySelectorAll('input[name="jours"]:checked')].map((el) => el.value);
-    if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 6) {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
+    if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 6) return disqualify("jours6");
     // moins de 20h/sem → disqualifié
     const heuresEl = form.querySelector('input[name="heures"]:checked');
-    if (heuresEl && ["Moins de 10h", "10-20h"].includes(heuresEl.value)) {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
+    if (heuresEl && ["Moins de 10h", "10-20h"].includes(heuresEl.value)) return disqualify("heures");
     // réactivité "Rarement" → disqualifié
     const reactEl = form.querySelector('input[name="reactivite"]:checked');
-    if (reactEl && reactEl.value === "Rarement") {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
+    if (reactEl && reactEl.value === "Rarement") return disqualify("reactivite");
     // démarrage trop lointain → disqualifié
     const demEl = form.querySelector('input[name="demarrage"]:checked');
-    if (demEl && ["2 semaines", "1 mois", "Plus tard"].includes(demEl.value)) {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
+    if (demEl && ["2 semaines", "1 mois", "Plus tard"].includes(demEl.value)) return disqualify("demarrage");
   }
   // Closer : critères
   if (role === "closer") {
     // aucune expérience de closing → disqualifié
     const dureeEl = form.querySelector('input[name="closing_duree"]:checked');
-    if (dureeEl && dureeEl.value === "Je n'ai pas encore d'expérience") {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
-    // démarrage "1 mois+" → disqualifié
-    const demEl = form.querySelector('input[name="demarrage"]:checked');
-    if (demEl && demEl.value === "1 mois+") {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
-    // dispo < 5 jours → disqualifié ("Tous les jours" = qualifié)
+    if (dureeEl && dureeEl.value === "Je n'ai pas encore d'expérience") return disqualify("experience");
+    // dispo < 2 jours → disqualifié ("Tous les jours" et "À voir" = qualifié)
     const jours = [...form.querySelectorAll('input[name="jours"]:checked')].map((el) => el.value);
-    if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 5) {
-      location.href = "disqualification.html?role=" + encodeURIComponent(role);
-      return true;
-    }
+    if (jours.length > 0 && !jours.includes("Tous les jours") && !jours.includes("À voir") && jours.length < 2) return disqualify("jours2");
   }
   return false;
 }

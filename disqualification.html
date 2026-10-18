@@ -16,6 +16,8 @@
   .merci h1 .g{color:var(--gold)}
   .merci p{color:var(--grey);font-size:18px;max-width:540px;margin-bottom:10px;line-height:1.5}
   .merci .brand{margin-top:42px;color:var(--gold);font-weight:600;letter-spacing:6px;text-transform:uppercase;font-size:14px}
+  .merci .reason{color:#fff;background:#141414;border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:12px;padding:14px 18px;font-size:16px}
+  .merci .reason b{color:var(--gold)}
   .share{margin-top:34px;max-width:560px;width:100%;background:#141414;border:1px solid var(--line);border-radius:18px;padding:22px 22px 20px}
   .share h2{font-size:19px;font-weight:700;margin-bottom:8px}
   .share h2 .g{color:var(--gold)}
@@ -33,6 +35,7 @@
     <span class="badge">Candidature</span>
     <h1 style="margin-top:18px">Merci pour le temps que tu as pris, <span class="g">mais on ne peut malheureusement pas te garder.</span></h1>
     <p>On a bien lu tes réponses, et ton profil ne correspond pas aux critères qu'on a fixés pour ce poste. Ce n'est pas un jugement sur toi : c'est juste que cette mission demande un profil précis.</p>
+    <p class="reason" id="reason" style="display:none"></p>
     <p>On te remercie sincèrement d'avoir regardé la vidéo et rempli le formulaire. On te souhaite le meilleur dans tes projets, inchaAllah.</p>
 
     <div class="share">
@@ -52,6 +55,21 @@
     var role = (new URLSearchParams(location.search).get('role') || 'closer').toLowerCase();
     if (role !== 'setter') role = 'closer';
     var url = location.origin + location.pathname.replace(/[^/]*$/, '') + role + '.html';
+    var REASONS = {
+      age: "ce poste est réservé aux personnes de plus de 18 ans.",
+      experience: "on recherche un closer qui a déjà de l'expérience en closing.",
+      jours2: "on a besoin d'au moins 2 jours de disponibilité par semaine.",
+      jours6: "on a besoin d'une disponibilité d'au moins 6 jours par semaine.",
+      heures: "on a besoin d'au moins 20 heures de disponibilité par semaine.",
+      reactivite: "on a besoin de quelqu'un qui peut rappeler un lead en moins de 5 minutes.",
+      demarrage: "on a besoin de quelqu'un qui peut démarrer sous 1 semaine."
+    };
+    var reason = new URLSearchParams(location.search).get('reason');
+    if (reason && REASONS[reason]) {
+      var r = document.getElementById('reason');
+      r.innerHTML = '<b>La raison :</b> ' + REASONS[reason];
+      r.style.display = '';
+    }
     var input = document.getElementById('shareLink'), ok = document.getElementById('copyOk');
     input.value = url;
     var msg = "L'institut À la lumière du Coran recrute un " + role + " musulman expérimenté, 100 % en remote. Je pense que ça peut t'intéresser : " + url;
