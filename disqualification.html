@@ -16,16 +16,53 @@
   .merci h1 .g{color:var(--gold)}
   .merci p{color:var(--grey);font-size:18px;max-width:540px;margin-bottom:10px;line-height:1.5}
   .merci .brand{margin-top:42px;color:var(--gold);font-weight:600;letter-spacing:6px;text-transform:uppercase;font-size:14px}
+  .share{margin-top:34px;max-width:560px;width:100%;background:#141414;border:1px solid var(--line);border-radius:18px;padding:22px 22px 20px}
+  .share h2{font-size:19px;font-weight:700;margin-bottom:8px}
+  .share h2 .g{color:var(--gold)}
+  .share p{font-size:15px;margin-bottom:14px;max-width:none}
+  .share .row{display:flex;gap:8px}
+  .share input{flex:1;min-width:0;background:#0A0A0A;border:1px solid var(--line);border-radius:10px;color:#fff;font:inherit;font-size:15px;padding:12px 14px}
+  .share button{background:var(--gold);color:#111;border:0;border-radius:10px;font:inherit;font-weight:700;font-size:15px;padding:12px 18px;cursor:pointer;white-space:nowrap}
+  .share .wa{display:inline-block;margin-top:12px;color:var(--green);font-weight:600;font-size:15px;text-decoration:none}
+  .share .ok{color:var(--green);font-size:14px;margin-top:10px;min-height:18px}
 </style>
 </head>
 <body>
   <div class="merci">
     <div class="mark"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
     <span class="badge">Candidature</span>
-    <h1 style="margin-top:18px">Merci pour ton intérêt, <span class="g">mais ce poste n'est pas pour toi.</span></h1>
-    <p>D'après tes réponses, ton profil ne correspond pas à ce qu'on recherche pour cette mission. Ce n'est pas un jugement — juste un manque d'alignement avec les critères du poste.</p>
-    <p>On te souhaite le meilleur dans tes projets, inchaAllah.</p>
+    <h1 style="margin-top:18px">Merci pour le temps que tu as pris, <span class="g">mais on ne peut malheureusement pas te garder.</span></h1>
+    <p>On a bien lu tes réponses, et ton profil ne correspond pas aux critères qu'on a fixés pour ce poste. Ce n'est pas un jugement sur toi : c'est juste que cette mission demande un profil précis.</p>
+    <p>On te remercie sincèrement d'avoir regardé la vidéo et rempli le formulaire. On te souhaite le meilleur dans tes projets, inchaAllah.</p>
+
+    <div class="share">
+      <h2>Tu connais quelqu'un qui pourrait <span class="g">correspondre</span> ?</h2>
+      <p>Si tu penses à une personne intéressée et potentiellement qualifiée pour ce poste, partage-lui ce lien :</p>
+      <div class="row">
+        <input id="shareLink" type="text" readonly value="">
+        <button type="button" id="copyBtn">Copier le lien</button>
+      </div>
+      <a class="wa" id="waLink" href="#" target="_blank" rel="noopener">Partager sur WhatsApp →</a>
+      <div class="ok" id="copyOk"></div>
+    </div>
     <div class="brand">À la lumière du Coran</div>
   </div>
+  <script>
+  (function(){
+    var role = (new URLSearchParams(location.search).get('role') || 'closer').toLowerCase();
+    if (role !== 'setter') role = 'closer';
+    var url = location.origin + location.pathname.replace(/[^/]*$/, '') + role + '.html';
+    var input = document.getElementById('shareLink'), ok = document.getElementById('copyOk');
+    input.value = url;
+    var msg = "L'institut À la lumière du Coran recrute un " + role + " musulman expérimenté, 100 % en remote. Je pense que ça peut t'intéresser : " + url;
+    document.getElementById('waLink').href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+    document.getElementById('copyBtn').addEventListener('click', function(){
+      var done = function(){ ok.textContent = 'Lien copié ✓'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, function(){ input.select(); document.execCommand('copy'); done(); });
+      else { input.select(); document.execCommand('copy'); done(); }
+    });
+    input.addEventListener('focus', function(){ input.select(); });
+  })();
+  </script>
 </body>
 </html>

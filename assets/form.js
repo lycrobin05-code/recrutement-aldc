@@ -271,7 +271,7 @@ function redirectIfDisqualified() {
   // Âge ≤ 18 → disqualifié (les deux rôles)
   const ageEl = form.querySelector('input[name="age"]');
   if (ageEl && ageEl.value.trim() && Number(ageEl.value) <= 18) {
-    location.href = "disqualification.html";
+    location.href = "disqualification.html?role=" + encodeURIComponent(role);
     return true;
   }
   // Setter : critères de disponibilité
@@ -279,25 +279,25 @@ function redirectIfDisqualified() {
     // dispo < 6 jours → disqualifié ("Tous les jours" = qualifié)
     const jours = [...form.querySelectorAll('input[name="jours"]:checked')].map((el) => el.value);
     if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 6) {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
     // moins de 20h/sem → disqualifié
     const heuresEl = form.querySelector('input[name="heures"]:checked');
     if (heuresEl && ["Moins de 10h", "10-20h"].includes(heuresEl.value)) {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
     // réactivité "Rarement" → disqualifié
     const reactEl = form.querySelector('input[name="reactivite"]:checked');
     if (reactEl && reactEl.value === "Rarement") {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
     // démarrage trop lointain → disqualifié
     const demEl = form.querySelector('input[name="demarrage"]:checked');
     if (demEl && ["2 semaines", "1 mois", "Plus tard"].includes(demEl.value)) {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
   }
@@ -306,19 +306,19 @@ function redirectIfDisqualified() {
     // aucune expérience de closing → disqualifié
     const dureeEl = form.querySelector('input[name="closing_duree"]:checked');
     if (dureeEl && dureeEl.value === "Je n'ai pas encore d'expérience") {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
     // démarrage "1 mois+" → disqualifié
     const demEl = form.querySelector('input[name="demarrage"]:checked');
     if (demEl && demEl.value === "1 mois+") {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
     // dispo < 5 jours → disqualifié ("Tous les jours" = qualifié)
     const jours = [...form.querySelectorAll('input[name="jours"]:checked')].map((el) => el.value);
     if (jours.length > 0 && !jours.includes("Tous les jours") && jours.length < 5) {
-      location.href = "disqualification.html";
+      location.href = "disqualification.html?role=" + encodeURIComponent(role);
       return true;
     }
   }
